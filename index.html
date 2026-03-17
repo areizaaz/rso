@@ -305,27 +305,30 @@
       from { width: 50%; }
       to   { width: 88%; }
     }
-    .device-stats {
+    .os-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
+      margin-top: 4px;
     }
-    .stat-pill {
+    .os-item {
       background: rgba(255,255,255,0.1);
       border-radius: 10px;
-      padding: 10px 8px;
-      text-align: center;
+      padding: 12px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      transition: background .18s;
     }
-    .stat-pill .num {
+    .os-item:hover { background: rgba(255,255,255,0.18); }
+    .os-item img { display: block; }
+    .os-name {
       font-family: var(--font-head);
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: var(--white);
-      display: block;
-    }
-    .stat-pill .lbl {
       font-size: 0.68rem;
-      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: .02em;
     }
 
     /* ── SECTION WRAPPER ────────────────────────────── */
@@ -691,6 +694,10 @@
       border-color: var(--blue-400);
       box-shadow: 0 0 0 3px rgba(30,95,173,0.12);
     }
+    .form-control.error {
+      border-color: #e53e3e;
+      box-shadow: 0 0 0 3px rgba(229,62,62,0.12);
+    }
     textarea.form-control { resize: vertical; min-height: 100px; }
     .form-submit {
       width: 100%;
@@ -707,12 +714,23 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: transform .18s, box-shadow .18s;
+      transition: transform .18s, box-shadow .18s, opacity .18s;
     }
-    .form-submit:hover {
+    .form-submit:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 28px rgba(30,95,173,0.35);
     }
+    .form-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .field-error {
+      font-size: 0.78rem;
+      color: #e53e3e;
+      margin-top: 5px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
 
     /* ── FOOTER ─────────────────────────────────────── */
     footer {
@@ -783,9 +801,13 @@
     <div class="nav-links">
       <a href="#paquetes">Paquetes</a>
       <a href="#como-funciona">¿Cómo funciona?</a>
+      <a href="#zona-estudiante">Descuento para estudiantes</a>
       <a href="#contacto">Contacto</a>
     </div>
-    <a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio" target="_blank" class="btn btn-wa nav-cta">
+    <!-- FIX #4: rel="noopener noreferrer" en todos los target="_blank" -->
+    <a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio"
+       target="_blank" rel="noopener noreferrer"
+       class="btn btn-wa nav-cta">
       <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       Agendar ahora
     </a>
@@ -800,9 +822,11 @@
     <div class="hero-text fade-up">
       <span class="tag">✦ Servicio a domicilio · Ciudad</span>
       <h1 class="hero-h1">Tu computador<br><span>listo y entregado</span><br>en tu puerta.</h1>
-      <p class="hero-sub">Formateo, instalación de Windows u otro sistema operativo, respaldo de archivos y limpieza. Recogemos, trabajamos y entregamos con comprobante.</p>
+      <p class="hero-sub">Formateo, instalación de Windows u otro sistema operativo y respaldo de archivos. Recogemos, trabajamos y entregamos.</p>
       <div class="hero-actions">
-        <a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio" target="_blank" class="btn btn-wa">
+        <a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio"
+           target="_blank" rel="noopener noreferrer"
+           class="btn btn-wa">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Agendar por WhatsApp
         </a>
@@ -811,7 +835,7 @@
       <div class="hero-trust">
         <span class="trust-item"><span class="dot"></span>Entrega con comprobante</span>
         <span class="trust-item"><span class="dot"></span>Recogida a domicilio</span>
-        <span class="trust-item"><span class="dot"></span>Pago al entregar</span>
+        <span class="trust-item"><span class="dot"></span>Pago contra entrega</span>
       </div>
     </div>
 
@@ -828,10 +852,19 @@
             <div class="screen-progress"><div class="screen-progress-bar"></div></div>
           </div>
         </div>
-        <div class="device-stats">
-          <div class="stat-pill"><span class="num">+200</span><span class="lbl">Clientes</span></div>
-          <div class="stat-pill"><span class="num">24h</span><span class="lbl">Entrega</span></div>
-          <div class="stat-pill"><span class="num">5★</span><span class="lbl">Rating</span></div>
+        <div class="os-grid">
+          <div class="os-item">
+            <img src="assets/os/windows.svg" alt="Windows" width="36" height="36">
+            <span class="os-name">Windows</span>
+          </div>
+          <div class="os-item">
+            <img src="assets/os/linux.svg" alt="Linux" width="36" height="36">
+            <span class="os-name">Linux</span>
+          </div>
+          <div class="os-item">
+            <img src="assets/os/chromeos.svg" alt="Chrome OS" width="36" height="36">
+            <span class="os-name">Chrome OS</span>
+          </div>
         </div>
       </div>
     </div>
@@ -844,7 +877,7 @@
     <div class="section-head centered fade-up">
       <span class="tag">Nuestros paquetes</span>
       <h2 class="section-title">Elige el plan que más<br>se adapta a ti</h2>
-      <p class="section-subtitle">Todos incluyen recogida y entrega a domicilio con comprobante de servicio.</p>
+      <p class="section-subtitle">Todos incluyen recogida y entrega a domicilio.</p>
     </div>
     <div class="cards-grid">
       <!-- Plan Estudiante -->
@@ -854,19 +887,19 @@
             <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
           </svg>
         </div>
-        <div class="pkg-name">Plan Estudiante</div>
-        <div class="pkg-desc">Perfecto para estudiantes que necesitan equipo listo para clases y tareas.</div>
+        <div class="pkg-name">Plan Esencial</div>
+        <div class="pkg-desc">Perfecto para quienes solo necesitan su equipo formateado sin programas extras.</div>
         <ul class="feat-list">
           <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Formateo e instalación del SO</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Office Provisional incluido</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Drivers esenciales instalados</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Recogida y entrega a domicilio</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Programas adicionales (Office, Navegadores, etc.)</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Respaldo de datos</li>
         </ul>
-        <div class="pkg-price">Consultar</div>
         <div class="pkg-price-note">Descuento 10% con carnet universitario 🎓</div>
-        <a href="https://wa.me/573000000000?text=Quiero+el+Plan+Estudiante" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center">Cotizar ahora</a>
+        <a href="https://wa.me/573000000000?text=Quiero+el+Plan+Estudiante"
+        target="_blank" rel="noopener noreferrer"
+        class="btn btn-outline" style="width:100%;justify-content:center">$ 50.000 COP</a>
       </div>
-
+      
       <!-- Plan Hogar (FEATURED) -->
       <div class="pkg-card featured fade-up" style="transition-delay:.1s">
         <div class="pkg-badge">Más popular</div>
@@ -875,17 +908,17 @@
             <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
         </div>
-        <div class="pkg-name">Plan Hogar</div>
-        <div class="pkg-desc">Ideal para familias que quieren su equipo seguro y con sus recuerdos a salvo.</div>
+        <div class="pkg-name">Plan Estandar</div>
+        <div class="pkg-desc">Ideal para quienes quieren su equipo como nuevo con los programas que necesitan.</div>
         <ul class="feat-list">
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Formateo completo del equipo</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Respaldo de fotos y archivos</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Instalación de programas básicos</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Comprobante de entrega firmado</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Formateo e instalación del SO</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Programas que necesites</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Respaldo de datos</li>
         </ul>
-        <div class="pkg-price">Consultar</div>
         <div class="pkg-price-note" style="color:rgba(255,255,255,0.55)">Precio según equipo y ubicación</div>
-        <a href="https://wa.me/573000000000?text=Quiero+el+Plan+Hogar" target="_blank" class="btn btn-wa" style="width:100%;justify-content:center">Cotizar ahora</a>
+        <a href="https://wa.me/573000000000?text=Quiero+el+Plan+Hogar"
+           target="_blank" rel="noopener noreferrer"
+           class="btn btn-wa" style="width:100%;justify-content:center">$ 60.000 COP</a>
       </div>
 
       <!-- Plan Full -->
@@ -895,17 +928,17 @@
             <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
           </svg>
         </div>
-        <div class="pkg-name">Plan Full</div>
+        <div class="pkg-name">Plan Completo</div>
         <div class="pkg-desc">El servicio completo: rendimiento al máximo por dentro y por fuera.</div>
         <ul class="feat-list">
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Formateo completo del equipo</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Limpieza física interna</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Formateo e instalación del SO</li>
+          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Programas que necesites</li>
           <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Respaldo completo de archivos</li>
-          <li class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Diagnóstico y reporte incluido</li>
         </ul>
-        <div class="pkg-price">Consultar</div>
         <div class="pkg-price-note">El paquete más completo disponible</div>
-        <a href="https://wa.me/573000000000?text=Quiero+el+Plan+Full" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center">Cotizar ahora</a>
+        <a href="https://wa.me/573000000000?text=Quiero+el+Plan+Full"
+           target="_blank" rel="noopener noreferrer"
+           class="btn btn-primary" style="width:100%;justify-content:center">$70.000 COP</a>
       </div>
     </div>
   </div>
@@ -927,7 +960,7 @@
           </svg>
         </div>
         <div class="step-title">1. Agendas</div>
-        <div class="step-desc">Escríbenos por WhatsApp o llena el formulario. Te confirmamos horario al instante.</div>
+        <div class="step-desc">Escríbenos por WhatsApp. Te confirmamos disponibilidad y coordinamos la recogida.</div>
       </div>
       <div class="step-item fade-up" style="transition-delay:.1s">
         <div class="step-num">
@@ -936,7 +969,7 @@
           </svg>
         </div>
         <div class="step-title">2. Recogemos</div>
-        <div class="step-desc">Vamos a tu casa, recogemos el equipo y te damos un recibo de recepción.</div>
+        <div class="step-desc">Vamos a tu casa, y recogemos el equipo.</div>
       </div>
       <div class="step-item fade-up" style="transition-delay:.2s">
         <div class="step-num">
@@ -945,7 +978,7 @@
           </svg>
         </div>
         <div class="step-title">3. Trabajamos</div>
-        <div class="step-desc">Realizamos el servicio con cuidado. Puedes hacer seguimiento por chat cuando quieras.</div>
+        <div class="step-desc">Realizamos el servicio. Puedes hacer seguimiento por chat cuando quieras.</div>
       </div>
       <div class="step-item fade-up" style="transition-delay:.3s">
         <div class="step-num">
@@ -954,7 +987,7 @@
           </svg>
         </div>
         <div class="step-title">4. Entregamos</div>
-        <div class="step-desc">Devolvemos tu equipo con comprobante firmado. Pagas al recibir. Sin sorpresas.</div>
+        <div class="step-desc">Devolvemos tu equipo. Pagas al recibir. Sin sorpresas.</div>
       </div>
     </div>
   </div>
@@ -969,11 +1002,7 @@
         Zona Estudiante
       </div>
       <h2 class="student-title">¡10% de descuento<br>con tu carnet! 🎓</h2>
-      <p class="student-sub">Si eres estudiante universitario, solo muestra tu carnet vigente al recibir el servicio y obtienes 10% de descuento automático en cualquier plan.</p>
-      <a href="https://wa.me/573000000000?text=Soy+estudiante+y+quiero+mi+descuento" target="_blank" class="student-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Reclamar descuento
-      </a>
+      <p class="student-sub">Si eres estudiante universitario, solo muestra tu carnet vigente al recibir el servicio y obtienes 10% de descuento en tu servicio.</p>
     </div>
   </div>
 </section>
@@ -1003,7 +1032,7 @@
           </svg>
         </div>
         <div class="pay-label">Transferencia</div>
-        <div class="pay-note">Nequi · Daviplata<br>Transferencia bancaria</div>
+        <div class="pay-note">Nequi · Bancolombia<br>Transferencia bancaria</div>
       </div>
     </div>
   </div>
@@ -1021,7 +1050,9 @@
       <div class="contact-info fade-up">
         <h3>Habla directo<br>con nosotros</h3>
         <p>La forma más rápida de agendar es por WhatsApp. Respondemos en minutos y coordinamos la recogida para el mismo día o el que más te convenga.</p>
-        <a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio" target="_blank" class="contact-wa">
+        <a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio"
+           target="_blank" rel="noopener noreferrer"
+           class="contact-wa">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Escribir por WhatsApp
         </a>
@@ -1044,12 +1075,10 @@
       <div class="form-card fade-up" style="transition-delay:.1s">
         <div class="form-title">Deja tu mensaje</div>
         <div class="form-group">
-          <label for="nombre">Nombre completo</label>
-          <input type="text" id="nombre" class="form-control" placeholder="Tu nombre" />
-        </div>
-        <div class="form-group">
-          <label for="telefono">WhatsApp / Teléfono</label>
-          <input type="tel" id="telefono" class="form-control" placeholder="300 000 0000" />
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" class="form-control" placeholder="Tu nombre"
+                 maxlength="80" autocomplete="name" />
+          <div class="field-error" id="err-nombre">Por favor ingresa tu nombre.</div>
         </div>
         <div class="form-group">
           <label for="plan">Plan de interés</label>
@@ -1063,9 +1092,12 @@
         </div>
         <div class="form-group">
           <label for="mensaje">Cuéntanos sobre tu equipo</label>
-          <textarea id="mensaje" class="form-control" placeholder="Marca, modelo, problema o servicio que necesitas…"></textarea>
+          <textarea id="mensaje" class="form-control"
+                    placeholder="Marca, modelo, problema o servicio que necesitas…"
+                    maxlength="500"></textarea>
         </div>
-        <button type="button" class="form-submit" onclick="sendFormWA()">
+        <!-- FIX #5: botón se deshabilita tras envío para evitar spam -->
+        <button type="button" id="btnEnviar" class="form-submit" onclick="sendFormWA()">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Enviar por WhatsApp
         </button>
@@ -1080,22 +1112,34 @@
     <div class="footer-logo">RSO: Mantenimiento Fácil</div>
     <p>Formateo · Instalación de SO · Recogida y Entrega a Domicilio<br>
     Hecho con ❤️ para estudiantes y hogares de la ciudad.<br>
-    <a href="https://wa.me/573000000000">Contáctanos por WhatsApp</a></p>
+    <a href="https://wa.me/573000000000" rel="noopener noreferrer">Contáctanos por WhatsApp</a></p>
     <p style="margin-top:16px;font-size:.78rem;opacity:.5">© 2025 RSO Mantenimiento Fácil. Todos los derechos reservados.</p>
   </div>
 </footer>
 
 <!-- Floating WhatsApp Button -->
-<a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio" target="_blank" class="fab-wa" title="Chatea con nosotros">
+<!-- FIX #4: rel="noopener noreferrer" -->
+<a href="https://wa.me/573000000000?text=Hola%2C+quiero+agendar+un+servicio"
+   target="_blank" rel="noopener noreferrer"
+   class="fab-wa" title="Chatea con nosotros">
   <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
 <script>
+  /* ── Número centralizado ─────────────────────────────────────────────────
+     FIX #1: número en una sola constante. Para cambiar el número,
+     edita SOLO esta línea. Los enlaces estáticos del HTML siguen siendo
+     necesarios para funcionar sin JS, pero el formulario usa esta variable.
+  ──────────────────────────────────────────────────────────────────────── */
+  const WA_NUMBER = '573000000000';
+
+  /* ── Nav scroll ─────────────────────────────────────────────────────── */
   const nav = document.getElementById('mainNav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 20);
   });
 
+  /* ── Fade-up observer ───────────────────────────────────────────────── */
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
@@ -1103,15 +1147,103 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  function sendFormWA() {
-    const nombre   = document.getElementById('nombre').value.trim();
-    const telefono = document.getElementById('telefono').value.trim();
-    const plan     = document.getElementById('plan').value;
-    const mensaje  = document.getElementById('mensaje').value.trim();
-    if (!nombre) { alert('Por favor ingresa tu nombre.'); return; }
-    const text = `Hola RSO! Te contacta *${nombre}*.\n📱 Tel: ${telefono || 'No indicado'}\n📦 Plan: ${plan || 'Por definir'}\n💬 ${mensaje || 'Sin mensaje adicional'}`;
-    window.open(`https://wa.me/573000000000?text=${encodeURIComponent(text)}`, '_blank');
+  /* ── Helpers ─────────────────────────────────────────────────────────
+     FIX #3: sanitización de texto antes de armar la URL de WhatsApp.
+     Elimina caracteres que no aportan información y previene
+     manipulación del mensaje con saltos de línea o caracteres especiales.
+  ──────────────────────────────────────────────────────────────────────── */
+  function sanitize(str) {
+    // Elimina etiquetas HTML y recorta espacios
+    return str.replace(/<[^>]*>/g, '').trim();
   }
+
+  function showError(id, show) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('visible', show);
+  }
+
+  function markField(id, error) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('error', error);
+  }
+
+  /* ── Validación y envío ──────────────────────────────────────────────
+     FIX #2: validación real de campos + FIX #3: sanitización de inputs
+     FIX #5: debounce / deshabilitación del botón tras envío
+  ──────────────────────────────────────────────────────────────────────── */
+  function sendFormWA() {
+    const btn = document.getElementById('btnEnviar');
+
+    // Leer y sanitizar valores
+    const nombre   = sanitize(document.getElementById('nombre').value);
+    const telefono = sanitize(document.getElementById('telefono').value);
+    const plan     = document.getElementById('plan').value;
+    const mensaje  = sanitize(document.getElementById('mensaje').value);
+
+    // Validaciones
+    let valid = true;
+
+    // Nombre: requerido, mínimo 2 caracteres
+    const nombreOk = nombre.length >= 2;
+    markField('nombre', !nombreOk);
+    showError('err-nombre', !nombreOk);
+    if (!nombreOk) valid = false;
+
+    // Teléfono: opcional pero si se escribe debe ser solo dígitos y mínimo 7
+    const telefonoLimpio = telefono.replace(/\s/g, '');
+    const telefonoOk = telefonoLimpio === '' || (/^\d{7,15}$/.test(telefonoLimpio));
+    markField('telefono', !telefonoOk);
+    showError('err-telefono', !telefonoOk);
+    if (!telefonoOk) valid = false;
+
+    if (!valid) return;
+
+    // Construir mensaje seguro para WhatsApp
+    const partes = [
+      `Hola RSO! Te contacta *${nombre}*.`,
+      `📱 Tel: ${telefonoLimpio || 'No indicado'}`,
+      `📦 Plan: ${plan || 'Por definir'}`,
+      mensaje ? `💬 ${mensaje}` : null
+    ].filter(Boolean);
+
+    const text = partes.join('\n');
+
+    // FIX #5: deshabilitar botón 4 segundos para evitar envíos múltiples
+    btn.disabled = true;
+    btn.textContent = 'Abriendo WhatsApp…';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Enviar por WhatsApp`;
+    }, 4000);
+
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+  }
+
+  /* ── Scroll centrado para enlaces con data-scroll="center" ──────────
+     Intercepta cualquier <a href="#zona-estudiante"> (o cualquier ancla
+     que tenga data-scroll="center") y hace scroll para que la sección
+     quede centrada verticalmente en la ventana en lugar de pegarse al tope.
+  ──────────────────────────────────────────────────────────────────────── */
+  document.querySelectorAll('a[href="#zona-estudiante"], a[href="#como-funciona"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const id     = this.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      const targetRect   = target.getBoundingClientRect();
+      const targetCenter = targetRect.top + window.scrollY + targetRect.height / 2;
+      const viewCenter   = window.innerHeight / 2;
+
+      window.scrollTo({
+        top: targetCenter - viewCenter,
+        behavior: 'smooth'
+      });
+    });
+  });
 </script>
 </body>
 </html>
